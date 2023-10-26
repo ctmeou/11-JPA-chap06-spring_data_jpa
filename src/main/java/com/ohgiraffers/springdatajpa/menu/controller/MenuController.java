@@ -19,7 +19,7 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    @GetMapping("/{menuCode}")    //menuCode를 전달하면서 빈등록
+    @GetMapping("/{menuCode}")    //menuCode를 전달하면서 빈등록 @PathVariable : URL 경로에 변수를 넣고 싶을 때, 이 변수의 값을 컨트롤러 메소드의 파라미터로 받아와야 할 때 사용한다.
     public String findMenuByCode(@PathVariable int menuCode, Model model) {
 
         MenuDTO menu = menuService.findMenuByCode(menuCode);
