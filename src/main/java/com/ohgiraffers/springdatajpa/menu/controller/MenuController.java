@@ -176,7 +176,7 @@ public class MenuController {
     }
 
     //3. 전체 메뉴 조회하기 - jpql
-    @GetMapping("/searchMenuList")
+    @GetMapping("/searchResultView")
     public String MenuListPage(Model model) {
 
         List<MenuDTO> menuList = menuService.selectMenuList();
