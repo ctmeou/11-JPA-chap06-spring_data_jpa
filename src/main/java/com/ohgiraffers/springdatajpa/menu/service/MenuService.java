@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.awt.SystemColor.menu;
+
 @Service //유의점 1. 빈 등록
 public class MenuService {
 
@@ -126,6 +128,36 @@ public class MenuService {
     public void deleteMenu(Integer menuCode) {
 
         menuRepository.deleteById(menuCode);
+
+    }
+
+
+    /*************************************** 과제 ***************************************/
+
+    //1. 메뉴 이름으로 조회하기
+    public List<MenuDTO> findMenuByName(String menuSearch) {
+
+        List<Menu> menuList = menuRepository.findMenuByMenuNameContaining(menuSearch);
+
+        return menuList.stream().map(menu -> modelMapper.map(menu, MenuDTO.class)).collect(Collectors.toList());
+
+    }
+
+    //2. 원하는 가격으로 메뉴 조회하기
+    public List<MenuDTO> findMenuByPriceBetween(Integer menuPrice1, Integer menuPrice2) {
+
+        List<Menu> menuList = menuRepository.findMenuByMenuPriceBetween(menuPrice1, menuPrice2);
+
+        return menuList.stream().map(menu -> modelMapper.map(menu, MenuDTO.class)).collect(Collectors.toList());
+
+    }
+
+    //3. 전체 메뉴 조회하기 - jpql
+    public List<MenuDTO> selectMenuList() {
+
+        List<Menu> menuList = menuRepository.selectMenuList();
+
+        return menuList.stream().map(menu -> modelMapper.map(menu, MenuDTO.class)).collect(Collectors.toList());
 
     }
 

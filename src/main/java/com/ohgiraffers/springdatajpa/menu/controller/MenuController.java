@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @Slf4j
 @Controller
 @RequestMapping("/menu")
@@ -137,5 +138,54 @@ public class MenuController {
         return "redirect:/menu/list";
 
     }
+
+
+    /*************************************** 과제 ***************************************/
+
+    //1. 메뉴 이름으로 조회하기
+    @GetMapping("/searchMenu")
+    public void searchMenuPage(){}
+
+    @GetMapping("/searchByName")        //html 내 name 설정값
+    public String searchByName(@RequestParam String menuSearch, Model model){
+        //void로 작성했기에 /menu/searchByName으로 간다.(템플릿이랑 경로가 일치해야 하고, 일치하지 않을 경우 String으로 작성하고 반환 값 템플릿 위치 작성해야 한다.)
+
+        List<MenuDTO> menuList = menuService.findMenuByName(menuSearch);
+        log.info("menuList : {}", menuList);
+
+        model.addAttribute("menuList", menuList);
+        //addAttribute는 key(String값)와 value형태(Object)로 전달인자를 보내고, 타임리프에서 사용하는 attribute의 key 값으로 객체를 찾아올 수 있다.
+
+        return "menu/searchResultView";
+
+    }
+
+    //2. 원하는 가격으로 메뉴 조회하기
+    @GetMapping("/searchPrice")
+    public void searchPricePage(){}
+
+    @GetMapping("/searchByPrice")
+    public String searchByPrice(@RequestParam Integer menuPrice1, @RequestParam Integer menuPrice2, Model model) {
+
+        List<MenuDTO> menuList = menuService.findMenuByPriceBetween(menuPrice1, menuPrice2);
+
+        model.addAttribute("menuList", menuList);
+
+        return "menu/searchResultView";
+
+    }
+
+    //3. 전체 메뉴 조회하기 - jpql
+    @GetMapping("/searchMenuList")
+    public String MenuListPage(Model model) {
+
+        List<MenuDTO> menuList = menuService.selectMenuList();
+
+        model.addAttribute("menuList", menuList);
+
+        return "menu/searchResultView";
+
+    }
+
 
 }
