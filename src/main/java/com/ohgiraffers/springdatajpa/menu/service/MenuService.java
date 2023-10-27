@@ -93,6 +93,7 @@ public class MenuService {
     }
 
     /* 4. JPQL or Native Query Test */
+    @Transactional(readOnly = true)
     public List<CategoryDTO> findAllCategory() {
 
         List<Category> categoryList = categoryRepository.findAllCategory();
@@ -107,7 +108,25 @@ public class MenuService {
 
         menuRepository.save(modelMapper.map(menu, Menu.class));
 
-        return;
+    }
+
+    /* 6. Entity 수정 */
+    @Transactional
+    public void modifyMenu(MenuDTO menu) {
+
+        //필요한 객체를 조회 후에 필요한 부분에 대해서 변경을 한다.
+        Menu foundMenu = menuRepository.findById(menu.getMenuCode()).orElseThrow(IllegalArgumentException::new); //findById 특정 아이디로 조회
+        //반환된 객체는 영속성 관리 객체에서 관리되는 객체이다.
+        foundMenu.setMenuName(menu.getMenuName());
 
     }
+
+    /* 7. Entity 삭제 */
+    @Transactional
+    public void deleteMenu(Integer menuCode) {
+
+        menuRepository.deleteById(menuCode);
+
+    }
+
 }

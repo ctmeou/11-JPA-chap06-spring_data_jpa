@@ -114,4 +114,28 @@ public class MenuController {
 
     }
 
+    @GetMapping("/modify")
+    public void modifyPage(){}
+
+    @PostMapping("/modify") //수정할 내용 메뉴 코드와 메뉴 이름을 MenuDTO로 받는다.
+    public String modifyMenu(MenuDTO menu) {
+
+        menuService.modifyMenu(menu);
+
+        return "redirect:/menu/" + menu.getMenuCode(); //수정하고자 하는 메뉴의 코드를 전달 받아왔을 때 그 값을 이용해서 redirect해서 수정된 결과 처리 조회
+
+    }
+
+    @GetMapping("/delete")
+    public void deletePage(){}
+
+    @PostMapping("/delete")
+    public String deleteMenu(@RequestParam Integer menuCode) {
+
+        menuService.deleteMenu(menuCode);
+
+        return "redirect:/menu/list";
+
+    }
+
 }
