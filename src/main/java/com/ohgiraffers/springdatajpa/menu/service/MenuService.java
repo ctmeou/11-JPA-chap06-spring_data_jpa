@@ -1,7 +1,10 @@
 package com.ohgiraffers.springdatajpa.menu.service;
 
+import com.ohgiraffers.springdatajpa.menu.dto.CategoryDTO;
 import com.ohgiraffers.springdatajpa.menu.dto.MenuDTO;
+import com.ohgiraffers.springdatajpa.menu.entity.Category;
 import com.ohgiraffers.springdatajpa.menu.entity.Menu;
+import com.ohgiraffers.springdatajpa.menu.respository.CategoryRepository;
 import com.ohgiraffers.springdatajpa.menu.respository.MenuRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -9,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +22,12 @@ public class MenuService {
 
     //유의점 2. 사용하고자 하는 객체 의존성 주입
     private final MenuRepository menuRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper; //등록한 bean을 사용하기 위해
 
-    public MenuService(MenuRepository menuRepository, ModelMapper modelMapper) {
+    public MenuService(MenuRepository menuRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.menuRepository = menuRepository;
+        this.categoryRepository = categoryRepository;
         this.modelMapper =modelMapper;
     }
 
@@ -30,6 +36,7 @@ public class MenuService {
     //조회만 하기 때문에 변경이 될 일은 없지만 혹시나 하는 경우에 있어, 변경이 되는 경우를 막고 싶어서
     //비영속 객체로 취급해서 활용하기 위해 작성한다.
     //서비스레이어에서 조회한 것을 비영속 객체로 반환하는 것
+    //고유값 조회(findById)나 전체 조회(findAll) 시에는 jpaRepository를 이용해서 구현하면 됨
     /* 1. id로 entity 조회 : findById */
     public MenuDTO findMenuByCode(int menuCode) {
 
@@ -72,7 +79,7 @@ public class MenuService {
 
     }
 
-    /* Query Method Test */
+    /* 3. Query Method Test */
     public List<MenuDTO> findByMenuPrice(Integer menuPrice) {
 
         //호출
@@ -85,4 +92,22 @@ public class MenuService {
 
     }
 
+    /* 4. JPQL or Native Query Test */
+    public List<CategoryDTO> findAllCategory() {
+
+        List<Category> categoryList = categoryRepository.findAllCategory();
+
+        return categoryList.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).collect(Collectors.toList());
+
+    }
+
+    /* 5. Entity 저장 */ //menuRepository 안에 있다.(CRUD동작이기 떄문, 따라서 정의할 필요 없음 persist할 필요 없이 엔티티 형식으로 save하면 됨)
+    @Transactional
+    public void registNewMenu(MenuDTO menu) {
+
+        menuRepository.save(modelMapper.map(menu, Menu.class));
+
+        return;
+
+    }
 }

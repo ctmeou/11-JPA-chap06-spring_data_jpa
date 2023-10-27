@@ -2,6 +2,7 @@ package com.ohgiraffers.springdatajpa.menu.controller;
 
 import com.ohgiraffers.springdatajpa.common.Pagenation;
 import com.ohgiraffers.springdatajpa.common.PagingButtonInfo;
+import com.ohgiraffers.springdatajpa.menu.dto.CategoryDTO;
 import com.ohgiraffers.springdatajpa.menu.dto.MenuDTO;
 import com.ohgiraffers.springdatajpa.menu.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -98,9 +96,22 @@ public class MenuController {
     @GetMapping("/regist")
     public void registPage(){}
 
+    @GetMapping("/category")
+    @ResponseBody
+    public List<CategoryDTO> findCategoryList() {
 
+        //데이터를 바로 보냄(리턴값은 문자열을 사용하고 문자열은 view를 응답, 현재 여기서는 데이터 응답 List<CategoryDTO>가 응답값)
+        return menuService.findAllCategory();
 
+    }
 
+    @PostMapping("/regist")
+    public String registMenu(MenuDTO menu) {
 
+        menuService.registNewMenu(menu);
+
+        return "redirect:/menu/list"; //저장이 되면 등록이 되었는지 확인하기 위해 menu/list로 이동
+
+    }
 
 }

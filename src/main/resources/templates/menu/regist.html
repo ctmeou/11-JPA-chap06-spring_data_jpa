@@ -18,5 +18,20 @@
         </select><br>
         <input type="submit" value="전송">
     </form>
+
+    <script>
+        fetch('/menu/category') //url만 넘기는 것은 따로 파라미터도 없고 get 방식 요청을 하겠다.
+            .then(res => res.json()) //반환 타입은 json 형태로 꺼내오고
+            // .then(data => console.log(data)) //꺼내올 때 data 잘 넘어왔는지 확인하기 위해 console.log 확인 작성
+            .then(data => {
+                const $categoryCode = document.getElementById('categoryCode');
+                for (let index in data) {
+                    const $option = document.createElement('option');
+                    $option.value = data[index].categoryCode;
+                    $option.textContent = data[index].categoryName;
+                    $categoryCode.append($option);
+                }
+            })
+    </script>
 </body>
 </html>
