@@ -42,7 +42,7 @@ public class MenuService {
 
     }
 
-    /* 2-1. 모든 entity 조회 : findAll */
+    /* 2-1. 모든 entity 조회 : findAll(Sort) */
     public List<MenuDTO> findMenuList() {
 
         List<Menu> menuList = menuRepository.findAll(Sort.by("menuCode").descending()); //정렬 기준 작성 시 필드명을 작성해야 한다.
@@ -71,4 +71,18 @@ public class MenuService {
         return menuList.map(menu -> modelMapper.map(menu, MenuDTO.class));
 
     }
+
+    /* Query Method Test */
+    public List<MenuDTO> findByMenuPrice(Integer menuPrice) {
+
+        //호출
+        // List<Menu> menuList = menuRepository.findByMenuPriceGreaterThan(menuPrice);
+        // List<Menu> menuList = menuRepository.findByMenuPriceGreaterThanOrderByMenuPrice(menuPrice);
+        List<Menu> menuList = menuRepository.findByMenuPriceGreaterThan(menuPrice, Sort.by("menuPrice").descending());
+
+        //menuList를 stream으로 만들고 stream을 menuDTO로 만든다.
+        return menuList.stream().map(menu -> modelMapper.map(menu, MenuDTO.class)).collect(Collectors.toList());
+
+    }
+
 }
